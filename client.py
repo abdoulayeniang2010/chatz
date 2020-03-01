@@ -1,31 +1,23 @@
-import socket, sys
+import socket
+import sys
 
-host = "localhost"
-port = 4441
-#creation du socket
-clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+HOST = "localhost"
+PORT = 4444
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
-    #demande de connexion
-    clientSocket.connect((host,port))
+    client_socket.connect((HOST, PORT))
 except socket.error:
-    print ("connexion echoué")
+    print ("connexion echoué avec le serveur ")
     sys.exit()
-#recevoir le message serveur
-messageServeur = clientSocket.recv(2048).decode("Utf8")
-#dialogue a tour de role entre le serveur et le client
+
+message_serveur = client_socket.recv(2048).decode("Utf8")
 while True:
-    #si le serveur envoie exit
-    if messageServeur.upper() == "EXIT":
-        clientSocket.send("exit".encode("Utf8"))
+    if message_serveur.upper() == "EXIT":
+        client_socket.send("exit".encode("Utf8"))
         break
-    # on affiche le message serveur
-    print ("Serveur ## ",messageServeur)
-    #saisir et envoyer son message
-    messageClient = input("Client >> ")
-    clientSocket.send(messageClient.encode("Utf8"))
-    #recevoir le message
-    messageServeur = clientSocket.recv(2048).decode("Utf8")
-#fermeture de la connexion
-print("connexion interrompue")
-clientSocket.close()
+    print ("Serveur ## ", message_serveur)
+    message_client = input("Client >> ")
+    client_socket.send(message_client.encode("Utf8"))
+    message_serveur = client_socket.recv(2048).decode("Utf8")
+print("**** Connexion Interrompue ...... ***** ")
+client_socket.close()
